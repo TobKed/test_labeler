@@ -22,7 +22,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: cat /dev/urandom | tr -dc A-Za-z0-9_ | head -c 999999 && echo
+      run: cat /dev/urandom | tr -dc A-Za-z0-9_ | head -c 99999999 && echo
 
     - uses: actions/github-script@0.9.0
       env:
@@ -35,3 +35,5 @@ jobs:
             ${process.env.PLAN}
             \`\`\`
             `;
+            
+            console.log(output)
