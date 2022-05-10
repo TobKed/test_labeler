@@ -16,11 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+
     - name: ARG_MAX
       run: getconf ARG_MAX
+
     - name: Terraform Plan
       id: plan
-      run: tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 9999999 ; echo
+      run: cat /dev/urandom | tr -dc A-Za-z0-9_ | head -c 999999 && echo
 
     - uses: actions/github-script@0.9.0
       env:
