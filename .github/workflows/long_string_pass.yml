@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: Terraform Plan
       id: plan
-      run: tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 13000 ; echo
+      run: tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 9999999 ; echo
 
     - uses: actions/github-script@0.9.0
       env:
@@ -37,9 +37,3 @@ jobs:
             \`\`\`
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-#            github.issues.createComment({
-#              issue_number: context.issue.number,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: output
-#            })
