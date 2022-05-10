@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+    - name: ARG_MAX
+      run: getconf ARG_MAX
     - name: Terraform Plan
       id: plan
       run: tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c 9999999 ; echo
@@ -27,7 +29,6 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
             const output = `#### TEST
-            
             \`\`\`\n
             ${process.env.PLAN}
             \`\`\`
