@@ -7,7 +7,7 @@ on:
     branches:
       - RELEASE-*
 
-  # push of newly created branch do not trigger workflow
+  # push from github action do not trigger workflow to avoid infinie loop
   workflow_run:
     workflows: [ "Bump version" ]
     types:
@@ -16,7 +16,6 @@ on:
 jobs:
    build:
      runs-on: ubuntu-latest
-     needs: [test-is-tag-on-branch]
      if: needs.test-is-tag-on-branch.outputs.test == 'true'
      steps:
      - name: Dump GitHub context
