@@ -45,7 +45,7 @@ jobs:
           
           bump2version ${VERSION} --allow-dirty --tag --commit
 
-          git push --follow-tags "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --follow-tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
         env:
           VERSION: ${{ steps.get_new_version.outputs.newVersion }}"
           BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
