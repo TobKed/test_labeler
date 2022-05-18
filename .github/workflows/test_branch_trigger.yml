@@ -5,7 +5,13 @@ on:
 
   push:
     branches:
-      - 'RELEASE-**'
+      - RELEASE-*
+
+  # push of newly created branch do not trigger workflow
+  workflow_run:
+    workflows: [ "Bump version" ]
+    types:
+      - completed
 
 jobs:
    build:
