@@ -1,0 +1,22 @@
+name: STAGING - Build and deploy
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - RELEASE-*
+
+jobs:
+   build:
+     runs-on: ubuntu-latest
+     needs: [test-is-tag-on-branch]
+     if: needs.test-is-tag-on-branch.outputs.test == 'true'
+     steps:
+     - name: Dump GitHub context
+       env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+       run: |
+        echo "$GITHUB_CONTEXT"
+        echo
+        env | sort
