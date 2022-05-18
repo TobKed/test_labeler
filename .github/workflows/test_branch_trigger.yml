@@ -5,7 +5,7 @@ on:
 
   push:
     branches:
-      - RELEASE-*
+      - 'RELEASE-**'
 
 jobs:
    build:
