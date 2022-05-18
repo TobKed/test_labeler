@@ -12,6 +12,7 @@ on:
           - patch
       uat_tag:
         description: 'UAT Tag to Deploy'
+        required: true
 
 jobs:
   bump-version:
