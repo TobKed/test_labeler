@@ -16,7 +16,7 @@ on:
         required: true
 
 jobs:
-  bumb-version:
+  bump-version:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 #    permissions:
@@ -38,8 +38,8 @@ jobs:
 
       - name: 'Create Release Branch'
         run: |
-          # git config --global user.name "Github Actions"
-          # git config --global user.email "github-actions@test.com"
+          git config --global user.name "Github Actions"
+          git config --global user.email "github-actions@test.com"
           
           git checkout -b $BRANCH $TAG 
           
