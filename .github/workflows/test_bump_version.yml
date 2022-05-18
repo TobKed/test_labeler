@@ -1,0 +1,48 @@
+name: Bump version
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: choice
+        description: 'Version Bump Type to Deploy'
+        required: true
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
+      uat_tag:
+        description: 'UAT Tag to Deploy'
+        required: true
+
+jobs:
+  bumb-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+#    permissions:
+#      contents: read
+    steps:
+      - name: "Checkout ${{ github.ref }} ( ${{ github.sha }} )'"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Install bump2version'
+        run: pip install --upgrade bump2version
+
+      - name: 'Get New Version'
+        id: get_new_version
+        run: |
+          VERSION=$(bump2version patch --dry-run --list | grep new_version | sed 's/.*=//')
+          echo "::set-output name=newVersion::${VERSION}"
+
+      - name: 'Create Release Branch'
+        run: |
+          # git config --global user.name "Github Actions"
+          # git config --global user.email "github-actions@test.com"
+
+          git checkout tags/${{ github.event.inputs.uat_tag }} -b RELEASE-${{ steps.get_new_version.outputs.newVersion }}
+
+          bump2version ${{ github.event.inputs.version }} --allow-dirty --tag --commit
+
+          git push --follow-tags https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
