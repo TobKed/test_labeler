@@ -43,7 +43,7 @@ jobs:
           
           git checkout -b $BRANCH $TAG 
           
-          bump2version ${VERSION} --allow-dirty --tag --commit
+          bump2version ${{ github.event.inputs.uat_tag }} --allow-dirty --tag --commit
 
           git push --follow-tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
         env:
