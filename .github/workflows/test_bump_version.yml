@@ -38,11 +38,15 @@ jobs:
 
       - name: 'Create Release Branch'
         run: |
-          git config --global user.name "Github Actions"
-          git config --global user.email "github-actions@test.com"
-          git fetch --all --tags --prune
-          git checkout tags/${{ github.event.inputs.uat_tag }} -b RELEASE-${{ steps.get_new_version.outputs.newVersion }}
+          # git config --global user.name "Github Actions"
+          # git config --global user.email "github-actions@test.com"
+          
+          git checkout -b $BRANCH $TAG 
+          
+          bump2version ${VERSION} --allow-dirty --tag --commit
 
-          bump2version ${{ github.event.inputs.version }} --allow-dirty --tag --commit
-
-          git push --follow-tags https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
+          git push --follow-tags "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        env:
+          VERSION: ${{ steps.get_new_version.outputs.newVersion }}"
+          BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
+          TAG: ${{ github.event.inputs.uat_tag }}
