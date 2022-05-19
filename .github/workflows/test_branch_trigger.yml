@@ -16,7 +16,6 @@ on:
 jobs:
    build:
      runs-on: ubuntu-latest
-     if: needs.test-is-tag-on-branch.outputs.test == 'true'
      steps:
      - name: Dump GitHub context
        env:

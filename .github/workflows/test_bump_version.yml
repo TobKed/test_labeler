@@ -6,6 +6,7 @@ on:
         type: choice
         description: 'Version Bump Type to Deploy'
         required: true
+        default: patch
         options:
           - major
           - minor
