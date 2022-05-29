@@ -8,10 +8,10 @@ on:
       - RELEASE-*
 
 #  # push from github action do not trigger workflow to avoid infinie loop
-#  workflow_run:
-#    workflows: [ "Bump version" ]
-#    types:
-#      - completed
+  workflow_run:
+    workflows: [ "Bump version" ]
+    types:
+      - completed
 
 env:
   GET_BRANCH_NAME_FROM_WORKFLOW_RUN_ARTIFACT: "${{ github.event_name == 'workflow_run' }}"
