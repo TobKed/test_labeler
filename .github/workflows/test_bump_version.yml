@@ -47,7 +47,7 @@ jobs:
 
           git push --follow-tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
           
-          echo "${BRANCH}" > CREATED_BRANCH.txt
+          echo "${BRANCH}" > BRANCH.txt
         env:
           BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
           TAG: ${{ github.event.inputs.uat_tag }}
@@ -56,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: created_branch
-          path: CREATED_BRANCH.txt
+          path: BRANCH.txt
