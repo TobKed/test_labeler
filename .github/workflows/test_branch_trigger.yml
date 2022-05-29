@@ -31,7 +31,7 @@ jobs:
          CURRENT_BRANCH_ARTIFACT_URL=$(gh api \
            -H "Accept: application/vnd.github.v3+json" \
            "${WORKFLOW_RUN_ARTIFACTS_URL##https://api.github.com/}" \
-           | jq '.artifacts[0].archive_download_url')
+           | jq -r '.artifacts[0].archive_download_url')
          
          echo "CURRENT_BRANCH_ARTIFACT_URL: ${CURRENT_BRANCH_ARTIFACT_URL}"
          
