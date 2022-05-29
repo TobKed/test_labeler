@@ -17,44 +17,44 @@ env:
   GET_BRANCH_NAME_FROM_WORKFLOW_RUN_ARTIFACT: "${{ github.event_name == 'workflow_run' }}"
 
 jobs:
-   build:
-     runs-on: ubuntu-latest
-     steps:
-     - name: Dump GitHub context
-       env:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-       run: |
-        echo "$GITHUB_CONTEXT"
-        echo
-        env | sort
+        run: |
+          echo "$GITHUB_CONTEXT"
+          echo
+          env | sort
 
-     - name: 'test get artifacts'
-       id: get_branch_name
-       run: |
-         if [[ ${GET_BRANCH_NAME_FROM_WORKFLOW_RUN_ARTIFACT:="false"} == "true" ]]; then
+      - name: 'test get artifacts'
+        id: get_branch_name
+        run: |
+          if [[ ${GET_BRANCH_NAME_FROM_WORKFLOW_RUN_ARTIFACT:="false"} == "true" ]]; then
           
-           CURRENT_BRANCH_ARTIFACT_URL=$(gh api \
-             -H "Accept: application/vnd.github.v3+json" \
-             "${WORKFLOW_RUN_ARTIFACTS_URL##https://api.github.com/}" \
-             | jq -r '.artifacts[0].archive_download_url')
-           
-           echo "CURRENT_BRANCH_ARTIFACT_URL: ${CURRENT_BRANCH_ARTIFACT_URL}"
-           
-           gh api \
-             -H "Accept: application/vnd.github.v3+json" \
-             "${CURRENT_BRANCH_ARTIFACT_URL##https://api.github.com/}" \
-             > branch.zip
-           
-           unzip branch.zip
-           RELEASE_BRANCH=$(cat BRANCH.txt)
-           
-           echo "::set-output name=branchName::${RELEASE_BRANCH}"
-         else
-           echo "::set-output name=branchName::${GITHUB_REF_NAME}"
-         fi
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         WORKFLOW_RUN_ARTIFACTS_URL: ${{ github.event.workflow_run.artifacts_url }}
+            CURRENT_BRANCH_ARTIFACT_URL=$(gh api \
+              -H "Accept: application/vnd.github.v3+json" \
+              "${WORKFLOW_RUN_ARTIFACTS_URL##https://api.github.com/}" \
+              | jq -r '.artifacts[0].archive_download_url')
+          
+            echo "CURRENT_BRANCH_ARTIFACT_URL: ${CURRENT_BRANCH_ARTIFACT_URL}"
+          
+            gh api \
+              -H "Accept: application/vnd.github.v3+json" \
+              "${CURRENT_BRANCH_ARTIFACT_URL##https://api.github.com/}" \
+              > branch.zip
+          
+            unzip branch.zip
+            RELEASE_BRANCH=$(cat BRANCH.txt)
+          
+            echo "::set-output name=branchName::${RELEASE_BRANCH}"
+          else
+            echo "::set-output name=branchName::${GITHUB_REF_NAME}"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_RUN_ARTIFACTS_URL: ${{ github.event.workflow_run.artifacts_url }}
 
       - name: test
         run: echo "${TEST}"
