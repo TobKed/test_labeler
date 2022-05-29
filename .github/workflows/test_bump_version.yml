@@ -49,7 +49,7 @@ jobs:
           
           echo "${BRANCH}" > BRANCH.txt
           
-          gh workflow run .github/workflows/test_branch_trigger.yml --ref "${BRANCH}"
+          gh workflow run test_branch_trigger.yml --ref "${BRANCH}"
         env:
           BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
           TAG: ${{ github.event.inputs.uat_tag }}
