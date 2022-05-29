@@ -17,3 +17,25 @@ jobs:
           echo "$GITHUB_CONTEXT"
           echo
           env | sort
+
+      - name: 'test get artifacts'
+        run: |
+          CURRENT_BRANCH_ARTIFACT_URL=$(gh api \
+            -H "Accept: application/vnd.github.v3+json" \
+            "${WORKFLOW_RUN_ARTIFACTS_URL}" \
+            | jq '.artifacts[0].archive_download_url')
+          
+          echo "CURRENT_BRANCH_ARTIFACT_URL: ${CURRENT_BRANCH_ARTIFACT_URL}"
+          
+          gh api \
+            -H "Accept: application/vnd.github.v3+json" \
+            "$CURRENT_BRANCH_ARTIFACT_URL" \
+            > release_branch.zip
+          
+          unzip release_branch.zip
+          RELEASE_BRANCH=$(cat CREATED_BRANCH.txt)
+          
+          echo "::set-output name=releaseBranch::${RELEASE_BRANCH}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_RUN_ARTIFACTS_URL: ${{ github.event.workflow_run.artifacts_url }}
