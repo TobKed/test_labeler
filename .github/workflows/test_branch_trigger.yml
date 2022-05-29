@@ -37,7 +37,7 @@ jobs:
          
          gh api \
            -H "Accept: application/vnd.github.v3+json" \
-           "${$CURRENT_BRANCH_ARTIFACT_URL##https://api.github.com/}" \
+           "${CURRENT_BRANCH_ARTIFACT_URL##https://api.github.com/}" \
            > release_branch.zip
          
          unzip release_branch.zip
