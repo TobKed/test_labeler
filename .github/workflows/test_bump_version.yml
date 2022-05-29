@@ -38,6 +38,7 @@ jobs:
 
       - name: 'Create Release Branch'
         run: |
+          set -x
           git config --global user.name "Github Actions"
           git config --global user.email "github-actions@test.com"
 
