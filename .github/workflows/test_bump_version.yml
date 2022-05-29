@@ -19,8 +19,6 @@ jobs:
   bump-version:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-#    permissions:
-#      contents: read
     steps:
       - name: "Checkout ${{ github.ref }} ( ${{ github.sha }} )'"
         uses: actions/checkout@v3
@@ -49,8 +47,7 @@ jobs:
           git push --follow-tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
           
           echo "${BRANCH}" > BRANCH.txt
-          
-          gh workflow run test_branch_trigger.yml --ref "${BRANCH}"
+          echo "$(git rev-parse @)" > COMMIT_SHA.txt
         env:
           BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
           TAG: ${{ github.event.inputs.uat_tag }}
@@ -59,5 +56,9 @@ jobs:
       - name: Upload created branch name as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: created_branch
           path: BRANCH.txt
+
+      - name: Upload github sha as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: COMMIT_SHA.txt

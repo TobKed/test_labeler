@@ -29,7 +29,7 @@ jobs:
           env | sort
 
       - name: 'test get artifacts'
-        id: get_branch_name
+        id: get_release_branch_data
         run: |
           if [[ ${GET_BRANCH_NAME_FROM_WORKFLOW_RUN_ARTIFACT:="false"} == "true" ]]; then
           
@@ -47,16 +47,22 @@ jobs:
           
             unzip branch.zip
             RELEASE_BRANCH=$(cat BRANCH.txt)
+            COMMIT_SHA=$(cat COMMIT_SHA.txt)
           
             echo "::set-output name=branchName::${RELEASE_BRANCH}"
+            echo "::set-output name=commitSha::${COMMIT_SHA}"
           else
             echo "::set-output name=branchName::${GITHUB_REF_NAME}"
+            echo "::set-output name=commitSha::${GITHUB_SHA}"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WORKFLOW_RUN_ARTIFACTS_URL: ${{ github.event.workflow_run.artifacts_url }}
 
       - name: test
-        run: echo "${TEST}"
+        run: |
+          echo "BRANCH_NAME: ${BRANCH_NAME}"
+          echo "COMMIT_SHA: ${COMMIT_SHA}"
         env:
-          TEST: ${{ steps.get_branch_name.outputs.branchName }}
+          BRANCH_NAME: ${{ steps.get_release_branch_data.outputs.branchName }}
+          COMMIT_SHA: ${{ steps.get_release_branch_data.outputs.commitSha }}
