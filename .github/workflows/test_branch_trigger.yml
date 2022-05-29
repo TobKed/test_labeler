@@ -55,3 +55,8 @@ jobs:
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          WORKFLOW_RUN_ARTIFACTS_URL: ${{ github.event.workflow_run.artifacts_url }}
+
+      - name: test
+        run: echo "${TEST}"
+        env:
+          TEST: ${{ steps.get_branch_name.outputs.branchName }}
