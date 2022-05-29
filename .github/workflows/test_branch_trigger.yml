@@ -27,6 +27,7 @@ jobs:
 
      - name: 'test get artifacts'
        run: |
+         set -x
          CURRENT_BRANCH_ARTIFACT_URL=$(gh api \
            -H "Accept: application/vnd.github.v3+json" \
            "${WORKFLOW_RUN_ARTIFACTS_URL##https://api.github.com/}" \
