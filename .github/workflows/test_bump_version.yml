@@ -49,10 +49,11 @@ jobs:
           
           echo "${BRANCH}" > BRANCH.txt
           
-          gh run list --workflow=test_branch_trigger.yml
+          gh workflow run .github/workflows/test_branch_trigger.yml --ref "${BRANCH}"
         env:
           BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
           TAG: ${{ github.event.inputs.uat_tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload created branch name as artifact
         uses: actions/upload-artifact@v3
