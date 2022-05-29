@@ -37,23 +37,23 @@ jobs:
           echo "::set-output name=newVersion::${VERSION}"
 
       - name: 'Create Release Branch'
-        uses: peterjgrainger/action-create-branch@v2.2.0
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "github-actions@test.com"
+
+          git checkout -b $BRANCH $TAG
+
+          bump2version ${{ github.event.inputs.version }} --allow-dirty --tag --commit
+
+          git push --follow-tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+          
+          echo "${BRANCH}" > CREATED_BRANCH.txt
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
+          TAG: ${{ github.event.inputs.uat_tag }}
+
+      - name: Upload created branch name as artifact
+        uses: actions/upload-artifact@v3
         with:
-          branch: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
-
-
-#      - name: 'Create Release Branch'
-#        run: |
-#          git config --global user.name "Github Actions"
-#          git config --global user.email "github-actions@test.com"
-#
-#          git checkout -b $BRANCH $TAG
-#
-#          bump2version ${{ github.event.inputs.version }} --allow-dirty --tag --commit
-#
-#          git push --follow-tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
-#        env:
-#          BRANCH: "RELEASE-${{ steps.get_new_version.outputs.newVersion }}"
-#          TAG: ${{ github.event.inputs.uat_tag }}
+          name: created_branch
+          path: CREATED_BRANCH.txt
