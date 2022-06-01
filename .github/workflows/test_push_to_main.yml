@@ -11,6 +11,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test-tee:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          var=$(gh config list | tee /dev/tty | wc -l)
+          echo ${var}
+
   label:
     name: pass long variable
     runs-on: ubuntu-latest
